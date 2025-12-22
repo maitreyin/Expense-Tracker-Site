@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+#chartCanvas {
+    width: 400px !important;
+    height: 400px !important;
+}
+</style>
+
+    <meta charset="UTF-8">
+    <title>Pie Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 40px;
+            color: #4B0082; /* dark purple text */
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #6A0DAD; /* purple heading */
+        }
+
+        .chart-box {
+            width: 400px;
+            height: 400px;
+            background: #E6E6FA; /* lavender background */
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(75,0,130,0.2); /* soft purple shadow */
+        }
+    </style>
+</head>
+<body>
+
+<h2>Income vs Expense Chart</h2>
+
+<div class="chart-box">
+    <canvas id="myChart"></canvas>
+</div>
+
+<script>
+fetch("fetch_expenses.php")
+    .then(response => response.json())
+    .then(data => {
+        const labels = data.map(x => x.title);
+        const values = data.map(x => parseFloat(x.amount));
+
+        const ctx = document.getElementById("myChart").getContext("2d");
+
+        new Chart(ctx, {
+            type: "pie",
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: [
+                        "#6A0DAD", // purple
+                        "#36A2EB", // blue
+                        "#FF6384", // pink
+                        "#FFCE56", // yellow
+                        "#4BC0C0", // teal
+                        "#FF9F40", // orange
+                        "#8A2BE2", // blue violet
+                        "#00FF7F"  // spring green
+                    ]
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#4B0082' // purple legend text
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+
+</body>
+</html>
