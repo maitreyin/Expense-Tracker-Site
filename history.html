@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #F5F5F5; /* neutral light background */
+            color: #4B0082; /* dark purple text */
+            padding: 30px;
+        }
+        h2 {
+            text-align: center;
+            color: #6A0DAD; /* purple heading */
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff; /* white table background */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #D8BFD8; /* soft purple border */
+        }
+        th {
+            background-color: #D8BFD8; /* soft purple header */
+            color: #4B0082;
+        }
+        tr:hover {
+            background-color: #E6E6FA; /* subtle lavender hover effect */
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Expense History</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Type</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody id="historyTable"></tbody>
+</table>
+
+<script>
+fetch("fetch_expenses.php")
+    .then(r => r.json())
+    .then(data => {
+        let rows = "";
+        if (Array.isArray(data)) {
+            data.forEach(item => {
+                // CONFIRMED FIX: Use item.entry_date directly, but fall back gracefully
+                const date = item.entry_date || 'N/A'; 
+                rows += `
+                    <tr>
+                        <td>${item.title}</td>
+                        <td>₹${item.amount}</td>
+                        <td>${item.type}</td>
+                        <td>${date}</td> 
+                    </tr>
+                `;
+            });
+        }
+        document.getElementById("historyTable").innerHTML = rows;
+    })
+    .catch(error => {
+        document.getElementById("historyTable").innerHTML = `<tr><td colspan="4">Error loading history. Check fetch_expenses.php and database.</td></tr>`;
+        console.error("Fetch history error:", error);
+    });
+</script>
+
+</body>
+</html>
